@@ -8,24 +8,33 @@ import { AiOutlineLogout } from 'react-icons/ai';
 import { BiSearch } from 'react-icons/bi';
 import { IoMdAdd } from 'react-icons/io';
 import Logo from '../../utils/logo.png';
+import { createOrGetUser } from '../../utils';
+import useAuthStore from '../../store/authStore';
 
 export const Navbar = () => {
-  const user = false;
+  const { userProfile, addUser } = useAuthStore();
   return (
     <div className="w-full flex justify-between items-center border-b-2 border-gray-200 py-2 px-4">
       <Link href="/">
-        <div className="w-[70px] md:w-[90px] md:h-[80px] ">
+        <div className="w-[70px] md:w-[90px] md:h-[80px]">
           <Image className="cursor-pointer" src={Logo} alt="logo" layout="responsive" />
         </div>
       </Link>
-      <div></div>
+      <div>search</div>
       <div>
-        {user ? (
-          <div>Logged In</div>
+        {userProfile ? (
+          <div className="flex gap-5 md:gap-10">
+            <Link href="/upload">
+              <button className="border-2 px-2 md:px-4 text-md font semibold flex items-center gap-2">
+                <IoMdAdd className="text-xl" /> {` `}
+                <span className="hidden md:block">Upload</span>
+              </button>
+            </Link>
+          </div>
         ) : (
           <GoogleLogin
-            onSuccess={(response) => console.log(response)}
-            onError={() => console.log('error')}
+            onSuccess={(response) => createOrGetUser(response, addUser)}
+            onError={() => 'error'}
           />
         )}
       </div>
