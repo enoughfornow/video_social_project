@@ -1,16 +1,27 @@
 import React from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
+import useAuthStore from '../store/authStore';
 import { SanityAssetDocument } from '@sanity/client';
 
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { client } from '../utils/client';
+import { topics } from '../utils/constants';
+
 
 const Upload = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [videoAsset, setVideoAsset] = React.useState<SanityAssetDocument | undefined>();
   const [wrongFileType, setWrongFileType] = React.useState(false);
+  const [caption, setCaption] = React.useState('');
+  const [category, setCategory] = React.useState(topics[0].name);
+  const [savingPost, setSavingPost] = React.useState(false);
+
+  const { userProfile }: { userProfile: any } = useAuthStore();
+
+  const router = useRouter()
 
   const uploadVideo = async (e: any) => {
     const selectedFile = e.target.files[0];
@@ -30,9 +41,36 @@ const Upload = () => {
       setWrongFileType(true);
     }
   };
+
+  const handlePost = async () => {
+    if (caption && videoAsset?._id && category) {
+      setSavingPost(true);
+
+      const document = {
+        _type: 'post',
+        caption,
+        video: {
+          _type: 'file',
+          asset: {
+            _type: 'reference',
+            _ref: videoAsset?._id,
+          },
+        },
+        userId: userProfile?._id,
+        postedBy: {
+          _type: 'postedBy',
+          _ref: userProfile?._id,
+        },
+        topic: category,
+      };
+      await axios.post('http://localhost:3000/api/post', document);
+      router.push('/')
+    }
+  };
+
   return (
-    <div className="flex w-full h-full">
-      <div className="bg-white rounded-lg">
+    <div className="flex w-full h-full absolute left-0 top-[60px] mt-10 pt-10 lg:pt-20 justify-center bg-[#F8F8F8]">
+      <div className="bg-white rounded-lg xl:h-[80vh] flex flex-wrap gap-6 justify-between items-center p-14 pt-6 w-[60%]">
         <div>
           <div>
             <p className="text-2xl font-bold">Upload Video</p>
@@ -44,7 +82,7 @@ const Upload = () => {
             ) : (
               <div>
                 {videoAsset ? (
-                  <div>
+                  <div className="w-[250px] h-[513px]">
                     <video
                       src={videoAsset.url}
                       loop
@@ -85,6 +123,42 @@ const Upload = () => {
                 Please select a video file
               </p>
             )}
+          </div>
+        </div>
+        <div className="flex flex-col gap-3 pb-10">
+          <label className="text-md font-medium">Caption</label>
+          <input
+            type="text"
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+            className="rounded outline-none border-2 text-md border-gray-200 p-2"
+          />
+          <label className="text-md font-medium">Choose a Category</label>
+          <select
+            onChange={(e) => setCategory(e.target.value)}
+            className="outline-none border-2 border-gray-200 text-md capitalize p-2 rounded cursor-pointer">
+            {topics.map((topic) => (
+              <option
+                key={topic.name}
+                className="outline-none capitalize bg-white text-gray-700 text-md p-2 hover:bg-slate-300"
+                value={topic.name}>
+                {topic.name}
+              </option>
+            ))}
+          </select>
+          <div className="flex gap-6 mt-10">
+            <button
+              onClick={() => {}}
+              type="button"
+              className="border-gray-300 border-2 text-md font-medium p-2 rounded w-28 lg:w-44 outline-none">
+              Clear
+            </button>
+            <button
+              onClick={handlePost}
+              type="button"
+              className="bg-[#000] text-white text-md font-medium p-2 rounded w-28 lg:w-44 outline-none">
+              Upload
+            </button>
           </div>
         </div>
       </div>

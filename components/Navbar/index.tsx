@@ -16,8 +16,10 @@ export const Navbar = () => {
   return (
     <div className="w-full flex justify-between items-center border-b-2 border-gray-200 py-2 px-4">
       <Link href="/">
-        <div className="w-[70px] md:w-[90px] md:h-[80px]">
+        <div className="w-[60px] md:w-[80px] md:h-[80px]">
+          <>
           <Image className="cursor-pointer" src={Logo} alt="logo" layout="responsive" />
+          </>
         </div>
       </Link>
       <div>search</div>
