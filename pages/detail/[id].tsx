@@ -1,9 +1,15 @@
-import React from 'react'
+import axios from 'axios';
+import React from 'react';
+import { BASE_URL } from '../../utils';
 
 const Detail = () => {
-  return (
-    <div>[id]</div>
-  )
+  return <div></div>;
+};
+
+export const getServerSideProps = async({
+  params: { id },
+}) => {
+  const {data} = await axios.get(`${BASE_URL}/api/post/${id}`)
 }
 
-export default Detail
+export default Detail;
