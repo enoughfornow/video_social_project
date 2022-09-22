@@ -5,3 +5,5 @@ export * from './Footer/index';
 export * from './Discover/index';
 export * from './VideoCard/index';
 export * from './NoResults/index';
+export * from './LikeButton/index';
+export * from './Comments/index';
