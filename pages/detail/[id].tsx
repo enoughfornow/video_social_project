@@ -24,7 +24,11 @@ const Detail: React.FC<IDetailProps> = ({ postDetails }) => {
   const [post, setPost] = React.useState(postDetails);
   const [playing, setPlaying] = React.useState(false);
   const [isVideoMuted, setIsVideoMuted] = React.useState(false);
+  const [comment, setComment] = React.useState('');
+  const [isPostingComment, setIsPostingComment] = React.useState(false);
+
   const videoRef = React.useRef<HTMLVideoElement>(null);
+
   const router = useRouter();
   const { userProfile }: any = useAuthStore();
 
@@ -51,6 +55,19 @@ const Detail: React.FC<IDetailProps> = ({ postDetails }) => {
         like,
       });
       setPost({ ...post, likes: data.likes });
+    }
+  };
+  const addComment = async (event:any) => {
+    event.preventDefault();
+    if (userProfile && comment) {
+      setIsPostingComment(true);
+      const { data } = await axios.put(`${BASE_URL}/api/post/${post._id}`, {
+        userId: userProfile._id,
+        comment,
+      });
+      setPost({ ...post, comments: data.comments });
+      setComment('');
+      setIsPostingComment(false);
     }
   };
 
@@ -126,14 +143,22 @@ const Detail: React.FC<IDetailProps> = ({ postDetails }) => {
           <p className="px-[70px] text-lg text-gray-600">{post.caption}</p>
           <div className="mt-10 px-[70px]">
             {userProfile && (
-              <LikeButton
+            <div className=''>
+                <LikeButton
                 handleLike={() => handleLike(true)}
                 handleDislike={() => handleLike(false)}
                 likes={post.likes}
               />
+            </div>
             )}
           </div>
-          <Comments />
+          <Comments
+            comment={comment}
+            setComment={setComment}
+            addComment={addComment}
+            comments={post.comments}
+            isPostingComment={isPostingComment}
+          />
         </div>
       </div>
     </div>
