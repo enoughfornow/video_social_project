@@ -26,18 +26,18 @@ export const VideoCard: NextPage<IVideoCardProps> = ({ post }) => {
       setPlaying(true);
     }
   };
-  React.useEffect(()=> {
-    if(videoRef?.current) {
-      videoRef.current.muted = isVideoMuted
+  React.useEffect(() => {
+    if (videoRef?.current) {
+      videoRef.current.muted = isVideoMuted;
     }
-  }, [isVideoMuted])
+  }, [isVideoMuted]);
 
   return (
     <div className="flex flex-col border-b-2 justify-start border-gray-200 pb-6">
       <div>
-        <div className="flex lg:ml-7  gap-3 md:p-2 cursor-pointer font-semibold rounded items-center">
+        <div className="flex lg:ml-7 gap-3 md:p-2 cursor-pointer font-semibold rounded items-center">
           <div className="md:w-16 md:h-16 w-10 h-10">
-            <Link href="/">
+            <Link href={`/profile/${post.postedBy._id}`}>
               <>
                 <Image
                   width={62}
@@ -51,7 +51,7 @@ export const VideoCard: NextPage<IVideoCardProps> = ({ post }) => {
             </Link>
           </div>
           <div>
-            <Link href="/">
+            <Link href={`/profile/${post.postedBy._id}`}>
               <div className="flex items-center gap-2">
                 <p className="flex items-center gap-2 md:text-md font-bold text-primary">
                   {post.postedBy.userName} {``}
