@@ -143,7 +143,7 @@ const Detail: React.FC<IDetailProps> = ({ postDetails }) => {
           <p className="px-[70px] text-lg text-gray-600">{post.caption}</p>
           <div className="mt-10 px-[70px]">
             {userProfile && (
-            <div className=''>
+            <div className='flex'>
                 <LikeButton
                 handleLike={() => handleLike(true)}
                 handleDislike={() => handleLike(false)}

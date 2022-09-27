@@ -2,10 +2,9 @@ import React from 'react';
 
 import { SuggestedAccounts, Footer, Discover } from '../../components';
 
-import { NextPage } from 'next';
+
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GoogleLogin } from 'react-google-login';
+
 import { AiFillHome, AiOutlineMenu } from 'react-icons/ai';
 import { ImCancelCircle } from 'react-icons/im';
 
